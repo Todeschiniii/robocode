@@ -378,6 +378,12 @@ public class Napolitano extends AdvancedRobot {
 		double poder = emRajada ? poderDeRajada() : escolherPoder(i, d);
 		double velBala = 20 - 3 * poder;
 
+		// nao atira se estiver longe demais e a energia esta baixa. Tiro fraco
+		// de longa distancia (taxa ~5%) nao se paga nunca: gasta 1, retorna 0.15.
+		// So atira longe se tiver energia de sobra (> 50) ou se for poder 3 (que
+		// mesmo fraco de longe justifica pelo risco de acerto eventual).
+		if (d > 500 && getEnergy() < 50 && poder < 3) return;
+
 		Point2D.Double p = preverPosicao(i, velBala);
 		double ang = Math.atan2(p.x - getX(), p.y - getY());
 		setTurnGunRightRadians(Utils.normalRelativeAngle(ang - getGunHeadingRadians()));
